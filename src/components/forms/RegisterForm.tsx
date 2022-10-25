@@ -33,6 +33,7 @@ export default function RegisterForm(props: IloginProps) {
 
         } catch (error) {
             if (axios.isAxiosError(error)) {
+                if(error.response.data.message)
                 setErrors(error.response.data.message.details.map((details) => {
                     return details.message;
                 }));

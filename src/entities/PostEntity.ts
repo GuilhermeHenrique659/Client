@@ -7,9 +7,9 @@ export class PostEntity {
 
     public description: string;
 
-    public like: number;
+    public like?: number;
 
-    public user: User;
+    public user?: User;
 
     constructor(props: PostEntity) {
         Object.assign(this, props);

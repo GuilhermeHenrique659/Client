@@ -1,4 +1,5 @@
 import { AxiosResponse } from "axios";
+import { on } from "events";
 import { useEffect, useState } from "react";
 import { PostEntity } from "../../entities/PostEntity";
 import { postRepository } from "../../server/post/PostRepository";
@@ -58,6 +59,9 @@ export default function Post() {
     }
 
     useEffect(() => {
+        window.addEventListener('postUpdated', () => {
+            loadPost()
+        })
         const loadPost = async () => {
             if (JSON.parse(localStorage.getItem('user')).token) {
                 setLoading(true);
@@ -75,11 +79,6 @@ export default function Post() {
         }
         loadPost();
     }, []);
-
-    console.log(posts.length);
-    console.log(total);
-
-
 
     if (posts) {
         return (

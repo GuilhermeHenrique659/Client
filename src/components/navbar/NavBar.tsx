@@ -45,11 +45,9 @@ function navBarUserNotAuthenticated() {
 }
 
 export default function NavBar(props: INavBar) {
-    console.log(props);
-
     return (
-        <>
+        <div className='fixed top-0 left-0 right-0 w-full'>
             {props.token ? NavBarUserAuthenticated(props) : navBarUserNotAuthenticated()}
-        </>
+        </div>
     )
 }

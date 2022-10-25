@@ -6,17 +6,15 @@ export class ServerRepository {
         private _jwtoken?: string) { }
 
     public setJWT(token: string) {
-        this._jwtoken = token;
+        this._jwtoken =  'Bearer ' + token;
     }
 
 
     public async get(path: string) {
         if (this._jwtoken) {
-            console.log(this._jwtoken);
-
             return this._axios.get(this._serverUrl + path, {
                 headers: {
-                    Authorization: 'Bearer ' + this._jwtoken
+                    Authorization: this._jwtoken
                 }
             });
         } else {
