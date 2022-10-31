@@ -34,8 +34,8 @@ export default function LoginForm(props: IloginProps) {
             localStorage.setItem('user', JSON.stringify(res.data));
             router.push('/')
         } catch (error) {
-            if (axios.isAxiosError(error)) {                
-                if (error.response.data.message) {
+            if (axios.isAxiosError(error)) {
+                if (error.response.data.message.details) {
                     setErrors(error.response.data.message.details.map((details) => {
                         return details.message;
                     }));
