@@ -39,7 +39,7 @@ export default function ProfileImage(props: IProps) {
             <div className="flex flex-col items-center">
                 <label htmlFor="dropzone-file" className="cursor-pointer" onMouseOver={() => { setBlur(' blur') }} onMouseOut={() => setBlur('')}>
                     <div className={"border-black-100 w-64 h-64 m-10 rounded-full bg-cover" + blur}
-                        style={{ backgroundImage: `url(http://localhost:3333/files/${props.user.avatar})` }}>
+                        style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_SERVER_URL}/files/${props.user.avatar})` }}>
                     </div>
 
                     <input id="dropzone-file" type="file" name="file" className="hidden" disabled={loading} onChange={handleFile} />

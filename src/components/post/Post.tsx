@@ -87,7 +87,7 @@ export default function Post() {
                     return (
                         <div key={post.id} className='p-6 overflow-y-auto'>
                             <div className="flex items-center justify-start mb-5">
-                                <div className="w-14 h-14 rounded-full bg-cover mr-6" style={{ backgroundImage: `url(http://localhost:3333/files/${post.user.avatar})` }}></div>
+                                <div className="w-14 h-14 rounded-full bg-cover mr-6" style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_SERVER_URL}/files/${post.user.avatar})` }}></div>
                                 <h4>{post.user.name}</h4>
                             </div>
                             <div className='flex-row p-2 w-fit'>

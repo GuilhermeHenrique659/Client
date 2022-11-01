@@ -28,7 +28,7 @@ function NavBarUserAuthenticated(props: INavBar) {
                 </svg>
             </Button>
             <div className="flex justify-between items-center p-2 mr-2">
-                <div className='border-black-100 w-11 h-11 rounded-full bg-cover mr-4' style={{ backgroundImage: `url(http://localhost:3333/files/${props.user.avatar})` }}>
+                <div className='border-black-100 w-11 h-11 rounded-full bg-cover mr-4' style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_SERVER_URL}/files/${props.user.avatar})` }}>
                 </div>
                 <Link href={'/profile'}><h2 className="mx-2 cursor-pointer">{props.user.name}</h2></Link>
                 <Button className="w-4" onClick={props.onLogout}>
