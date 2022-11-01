@@ -9,6 +9,12 @@ class UserRepository {
         return serverRepository.post('/user', user);
     }
 
+    public async updateAvatar(file: any): Promise<AxiosResponse<any, any>> {
+        return serverRepository.patch('/user/avatar', file, {
+            'Content-Type': 'multipart/form-data',
+        })
+    }
+
     public async login(user: IUserLoginDTO): Promise<AxiosResponse<any, any>> {
         return serverRepository.post('/user/session', user);
     }

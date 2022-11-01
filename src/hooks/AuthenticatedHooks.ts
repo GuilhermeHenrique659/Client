@@ -26,5 +26,6 @@ export default function useAuthenticated() {
         token,
         user,
         handleLogout,
+        setUser,
     }
 }

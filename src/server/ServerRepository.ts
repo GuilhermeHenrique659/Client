@@ -6,7 +6,7 @@ export class ServerRepository {
         private _jwtoken?: string) { }
 
     public setJWT(token: string) {
-        this._jwtoken =  'Bearer ' + token;
+        this._jwtoken = 'Bearer ' + token;
     }
 
 
@@ -22,18 +22,37 @@ export class ServerRepository {
         }
     }
 
-    public async post(path, data: any) {
-
+    public async post(path, data: any, header?: Record<string, string>) {
         if (this._jwtoken) {
             return this._axios.post(this._serverUrl + path, data, {
-                headers: {
-                    Authorization: this._jwtoken,
+                headers: header ? { Authorization: this._jwtoken, ...header } : {
+                    Authorization: this._jwtoken
                 }
             });
         } else {
             return this._axios.post(this._serverUrl + path, data);
         }
     }
+
+    public async patch(path, data: any, header?: Record<string, string>) {
+        console.log((this._serverUrl + path, data, {
+            headers: header ? { Authorization: this._jwtoken, ...header } : {
+                Authorization: this._jwtoken
+            }
+        }));
+
+        if (this._jwtoken) {
+            return this._axios.patch(this._serverUrl + path, data, {
+                headers: header ? { Authorization: this._jwtoken, ...header } : {
+                    Authorization: this._jwtoken
+                }
+            });
+        } else {
+            return this._axios.patch(this._serverUrl + path, data);
+        }
+    }
+
+
 }
 
 export const serverRepository = new ServerRepository(process.env.NEXT_PUBLIC_SERVER_URL, axios);
