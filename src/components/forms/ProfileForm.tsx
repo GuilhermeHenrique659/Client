@@ -1,26 +1,23 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { User } from "../../entities/User";
+import useProfile from "../../hooks/ProfileFormHooks";
 import Button from "../buttons/Button";
 import Input from "./input";
 
 interface IProfileFormProps {
-    user: Record<string, string>;
-    setUser: Dispatch<SetStateAction<Record<string, string>>>
-}
-
-function FormPassowrd(props: any) {
-    return (
-        <>
-            <Input readonly={props.disableForm} label="Nova senha" type="password" />
-            <hr className='border-gray-500 w-full p-1 m-2' />
-
-            <Input readonly={props.disableForm} label="Confirme sua antiga senha" type="password" />
-            <hr className='border-gray-500 w-full p-1 m-2' />
-        </>
-    )
+    user: User
+    setUser: Dispatch<SetStateAction<User>>
 }
 
 export default function ProfileForm(props: IProfileFormProps) {
-    const [disableForm, setDisableForm] = useState<boolean>(true)
+    const [disableForm, setDisableForm] = useState<boolean>(true);
+    const { name, setName, email, setEmail, password, setPassword, passwordToConfirm, setPasswordToConfirm } = useProfile(props.user);
+    useEffect(() => {
+        if (props.user) {
+            setEmail(props.user.email)
+            setName(props.user.name)
+        }
+    }, [props.user])
 
     return (
         <div>
@@ -30,11 +27,17 @@ export default function ProfileForm(props: IProfileFormProps) {
                 </svg>
             </Button> : ''}
             <form className='m-2'>
-                <Input readonly={disableForm} label="Nome" type="text" value={props.user ? props.user.name : ''} />
+                <Input readonly={disableForm} label="Nome" type="text" value={name} onChange={setName} />
                 <hr className='border-gray-500 w-full p-1 m-2' />
-                <Input readonly={disableForm} label="E-mail" type="email" value={props.user ? props.user.email : ''} />
+                <Input readonly={disableForm} label="E-mail" type="email" value={email} onChange={setEmail} />
                 <hr className='border-gray-500 w-full p-1 m-2' />
-                {!disableForm ? <FormPassowrd disableForm={disableForm} /> : ' '}
+                {!disableForm ? <>
+                    <Input readonly={disableForm} label="Nova senha" type="password" value={password} onChange={setPassword} />
+                    <hr className='border-gray-500 w-full p-1 m-2' />
+
+                    <Input readonly={disableForm} label="Confirme sua antiga senha" type="password" value={passwordToConfirm} onChange={setPasswordToConfirm} />
+                    <hr className='border-gray-500 w-full p-1 m-2' />
+                </> : ' '}
                 {!disableForm ? <div className="m-4">
                     <Button className="bg-indigo-800 m-2">Salvar</Button>
                 </div> : ''}

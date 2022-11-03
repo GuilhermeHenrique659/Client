@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { useState } from "react";
+import { User } from "../../entities/User";
 import Button from "../buttons/Button";
 import SideBar from "./SideBar";
 
 interface INavBar {
     token?: string
-    user?: Record<string, string>;
+    user?: User;
     onLogout?: () => void;
 }
 

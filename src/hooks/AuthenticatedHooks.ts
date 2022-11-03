@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { User } from "../entities/User";
 
 
 
 export default function useAuthenticated() {
     const [token, setToken] = useState<string | null>()
-    const [user, setUser] = useState<Record<string, string> | null>();
+    const [user, setUser] = useState<User>();
 
     useEffect(() => {
         try {

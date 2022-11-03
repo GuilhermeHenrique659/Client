@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Button from "../components/buttons/Button";
 import Input from "../components/forms/input";
 import ProfileForm from "../components/forms/ProfileForm";
@@ -9,11 +10,6 @@ import useAuthenticated from "../hooks/AuthenticatedHooks";
 export default function Profile() {
     const { token, user, handleLogout, setUser } = useAuthenticated();
 
-
-    const handleAvatarUpdate = () => {
-        setUser(JSON.parse(localStorage.getItem('user')).userExits);
-    }
-
     return (
         <div>
             <NavBar token={token} user={user} onLogout={handleLogout}></NavBar>
@@ -21,7 +17,7 @@ export default function Profile() {
                 <div className='bg-slate-900 w-full lg:w-2/3 h-full mt-10 rounded-md'>
                     <div className="flex flex-col items-center lg:flex-row text-white h-full">
                         <div className="flex-1 w-64">
-                            <ProfileImage user={user} handleUpdateAvatar={handleAvatarUpdate}></ProfileImage>
+                            <ProfileImage user={user} setUser={setUser}></ProfileImage>
                         </div>
                         <div className="flex-1 m-6 p-4">
                             <ProfileForm user={user} setUser={setUser} />

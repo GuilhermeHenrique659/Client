@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction, useState } from "react"
+import { User } from "../../entities/User";
 import { userRepository } from "../../server/user/UserRepository";
-import Input from "../forms/input"
 
 interface IProps {
-    user: Record<string, string>
-    handleUpdateAvatar: () => void;
+    user: User;
+    setUser: Dispatch<SetStateAction<User>>
 }
 
 export default function ProfileImage(props: IProps) {
@@ -19,14 +19,13 @@ export default function ProfileImage(props: IProps) {
             const data = new FormData();
             data.append('file', file[0])
             const res = await userRepository.updateAvatar(data);
-            console.log(res);
             const user = {
                 token: JSON.parse(localStorage.getItem('user')).token,
                 userExits: res.data
             }
             localStorage.removeItem('user')
             localStorage.setItem('user', JSON.stringify(user));
-            console.log(props.handleUpdateAvatar());
+            props.setUser(res.data)
             setLoading(false);
         } catch (err) {
             console.log(err);
