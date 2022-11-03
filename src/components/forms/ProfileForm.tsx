@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../entities/User";
 import useProfile from "../../hooks/ProfileFormHooks";
 import Button from "../buttons/Button";
+import { Errors } from "../errors/Errors";
 import Input from "./input";
 
 interface IProfileFormProps {
@@ -11,7 +12,16 @@ interface IProfileFormProps {
 
 export default function ProfileForm(props: IProfileFormProps) {
     const [disableForm, setDisableForm] = useState<boolean>(true);
-    const { name, setName, email, setEmail, password, setPassword, passwordToConfirm, setPasswordToConfirm } = useProfile(props.user);
+    const { name, setName,
+        email, setEmail, password,
+        setPassword, passwordToConfirm,
+        setPasswordToConfirm, handleSubmitProfileForm,
+        loading, errors
+    } = useProfile({
+        user: props.user,
+        setUser: props.setUser
+    });
+
     useEffect(() => {
         if (props.user) {
             setEmail(props.user.email)
@@ -26,7 +36,7 @@ export default function ProfileForm(props: IProfileFormProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                 </svg>
             </Button> : ''}
-            <form className='m-2'>
+            <form className='m-2' onSubmit={handleSubmitProfileForm}>
                 <Input readonly={disableForm} label="Nome" type="text" value={name} onChange={setName} />
                 <hr className='border-gray-500 w-full p-1 m-2' />
                 <Input readonly={disableForm} label="E-mail" type="email" value={email} onChange={setEmail} />
@@ -38,8 +48,10 @@ export default function ProfileForm(props: IProfileFormProps) {
                     <Input readonly={disableForm} label="Confirme sua antiga senha" type="password" value={passwordToConfirm} onChange={setPasswordToConfirm} />
                     <hr className='border-gray-500 w-full p-1 m-2' />
                 </> : ' '}
+
                 {!disableForm ? <div className="m-4">
-                    <Button className="bg-indigo-800 m-2">Salvar</Button>
+                    {errors ? Errors(errors) : false}
+                    <Button className="bg-indigo-800 m-2" disable={loading} >Salvar</Button>
                 </div> : ''}
             </form>
         </div>

@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { User } from "../../entities/User";
 import { serverRepository } from "../ServerRepository";
 import { IUserLoginDTO } from "./IUserLoginDTO";
 import { IUserSaveDTO } from "./IUserSaveDTO";
@@ -13,6 +14,10 @@ class UserRepository {
         return serverRepository.patch('/user/avatar', file, {
             'Content-Type': 'multipart/form-data',
         })
+    }
+
+    public async updateUser(user: User): Promise<AxiosResponse<any, any>> {
+        return serverRepository.put('/user/', user);
     }
 
     public async login(user: IUserLoginDTO): Promise<AxiosResponse<any, any>> {

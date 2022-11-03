@@ -11,6 +11,8 @@ export class User {
 
     public avatar?: string;
 
+    public passwordToConfirm?: string;
+
     constructor(props: User) {
         Object.assign(this, props);
     }

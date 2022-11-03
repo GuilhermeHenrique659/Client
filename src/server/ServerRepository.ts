@@ -34,6 +34,18 @@ export class ServerRepository {
         }
     }
 
+    public async put(path, data: any, header?: Record<string, string>) {
+        if (this._jwtoken) {
+            return this._axios.put(this._serverUrl + path, data, {
+                headers: header ? { Authorization: this._jwtoken, ...header } : {
+                    Authorization: this._jwtoken
+                }
+            });
+        } else {
+            return this._axios.put(this._serverUrl + path, data);
+        }
+    }
+
     public async patch(path, data: any, header?: Record<string, string>) {
         console.log((this._serverUrl + path, data, {
             headers: header ? { Authorization: this._jwtoken, ...header } : {
