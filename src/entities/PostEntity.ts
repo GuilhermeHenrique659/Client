@@ -14,4 +14,8 @@ export class PostEntity {
     constructor(props: PostEntity) {
         Object.assign(this, props);
     }
+
+    public addLike() {
+        this.like += 1;
+    }
 }

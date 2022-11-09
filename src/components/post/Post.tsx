@@ -1,5 +1,3 @@
-import { AxiosResponse } from "axios";
-import { on } from "events";
 import { useEffect, useState } from "react";
 import { PostEntity } from "../../entities/PostEntity";
 import { postRepository } from "../../server/post/PostRepository";
@@ -9,16 +7,16 @@ import Button from "../buttons/Button";
 interface IGetPostList {
     total: number;
     current_page: number;
-    per_page: number
+    per_page: number;
     posts: PostEntity[]
 }
 
-async function getPostList(page: number): Promise<IGetPostList> {
+async function getPostList(page: number, userId?: string): Promise<IGetPostList> {
     try {
         const token = JSON.parse(localStorage.getItem('user')).token;
         if (token) {
             serverRepository.setJWT(token);
-            const response = await postRepository.listPost(page);
+            const response = await postRepository.listPost(page, userId);
             return {
                 total: response.total,
                 current_page: response.current_page,
@@ -33,7 +31,24 @@ async function getPostList(page: number): Promise<IGetPostList> {
 
 }
 
-export default function Post() {
+
+async function addLike(postId: string) {
+    try {
+        const token = JSON.parse(localStorage.getItem('user')).token;
+        if (token) {
+            serverRepository.setJWT(token);
+            const response = await postRepository.addLike(postId);
+            if (response.data.likeIsAdd = true) {
+                return true;
+            }
+        }
+    } catch (error) {
+        console.log(error);
+
+    }
+}
+
+export default function Post(props: { userId?: string }) {
     const [posts, setPosts] = useState<PostEntity[]>([]);
     const [total, setTotal] = useState<number>();
     const [page, setPage] = useState<number>();
@@ -43,7 +58,7 @@ export default function Post() {
         if (posts.length <= total) {
 
             const loadPage = async () => {
-                const res = await getPostList(page + 1);
+                const res = await getPostList(page + 1, props.userId);
 
                 if (res) {
                     const previous = posts;
@@ -65,7 +80,7 @@ export default function Post() {
         const loadPost = async () => {
             if (JSON.parse(localStorage.getItem('user')).token) {
                 setLoading(true);
-                const res = await getPostList(1);
+                const res = await getPostList(1, props.userId);
 
                 if (res) {
                     setTotal(res.total);
@@ -79,6 +94,22 @@ export default function Post() {
         }
         loadPost();
     }, []);
+
+    const handleAddLike = async (postId: string) => {
+        if (await addLike(postId)) {
+            posts.map((post) => {
+                if (post.id === postId) {
+                    const like = document.getElementById(postId);
+                    like.textContent = String(parseInt(like.textContent) + 1);
+                }
+            })
+        } else {
+            const like = document.getElementById(postId);
+            like.style.color = 'red'
+            await new Promise(resolve => setTimeout(resolve, 4000));
+            like.style.color = 'white'
+        }
+    }
 
     if (posts) {
         return (
@@ -94,7 +125,14 @@ export default function Post() {
                                 <h2 className='text-xl m-4'>{post.title}</h2>
                                 <p className="m-4">{post.description}</p>
                             </div>
-
+                            <div className='flex flex-row p-4 m-4 items-center'>
+                                <Button onClick={() => handleAddLike(post.id)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 00-1.423-.23H5.904M14.25 9h2.25M5.904 18.75c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 01-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 10.203 4.167 9.75 5 9.75h1.053c.472 0 .745.556.5.96a8.958 8.958 0 00-1.302 4.665c0 1.194.232 2.333.654 3.375z" />
+                                    </svg>
+                                </Button>
+                                <p id={post.id} className='mx-4 p-1'>{post.like}</p>
+                            </div>
                             <hr className='border-gray-500 w-full p-1' />
                         </div>
                     )

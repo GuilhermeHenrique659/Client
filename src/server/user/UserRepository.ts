@@ -16,8 +16,8 @@ class UserRepository {
         })
     }
 
-    public async updateUser(user: User): Promise<AxiosResponse<any, any>> {
-        return serverRepository.put('/user/', user);
+    public async updateUser(user: Record<string, string>): Promise<AxiosResponse<any, any>> {
+        return serverRepository.put('/user', user);
     }
 
     public async login(user: IUserLoginDTO): Promise<AxiosResponse<any, any>> {

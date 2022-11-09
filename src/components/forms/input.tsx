@@ -8,8 +8,6 @@ interface Iinput {
 }
 
 export default function Input(props: Iinput) {
-    console.log(props.readonly);
-
     return (
         <div className={"flex flex-col p-2 m-4" + props.className}>
             <label><span>{props.label}</span></label>

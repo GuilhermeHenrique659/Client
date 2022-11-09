@@ -19,7 +19,8 @@ export default function ProfileForm(props: IProfileFormProps) {
         loading, errors
     } = useProfile({
         user: props.user,
-        setUser: props.setUser
+        setUser: props.setUser,
+        setDisableForm,
     });
 
     useEffect(() => {
