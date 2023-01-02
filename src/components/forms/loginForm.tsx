@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useState } from "react";
-import { userRepository } from "../../server/user/UserRepository";
+import { userRepository } from "../../server/repository/user/UserRepository";
 import Button from "../buttons/Button";
 import { Errors } from "../errors/Errors";
 import Input from "./input";
+import { AppError } from "../errors/AppError";
 
 interface IloginProps {
     inputs: {
@@ -19,29 +20,21 @@ interface IloginProps {
 }
 
 export default function LoginForm(props: IloginProps) {
-    const [errors, setErrors] = useState<string[]>();
-
+    const [errors, setErrors] = useState<AppError>();
     const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            const res = await userRepository.login({
+            const user = await userRepository.login({
                 email: props.inputs.email,
                 password: props.inputs.password,
             });
 
-            localStorage.setItem('user', JSON.stringify(res.data));
+            localStorage.setItem('user', JSON.stringify(user.data));
             router.push('/')
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                if (error.response.data.message.details) {
-                    setErrors(error.response.data.message.details.map((details) => {
-                        return details.message;
-                    }));
-                }
-                setErrors([error.response.data.message])
-            }
+            setErrors(error)
         }
     }
 

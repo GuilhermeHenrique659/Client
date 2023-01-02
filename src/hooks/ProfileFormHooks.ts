@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Dispatch, SetStateAction, useState } from "react";
 import { User } from "../entities/User";
-import { userRepository } from "../server/user/UserRepository";
+import { userRepository } from "../server/repository/user/UserRepository";
+import { AppError } from "../components/errors/AppError";
 
 interface IUserProfileProps {
     user: User,
@@ -16,7 +17,7 @@ export default function useProfile(props: IUserProfileProps) {
     const [passwordToConfirm, setPasswordToConfirm] = useState<string>();
     const [avatar, setAvatar] = useState<string>(props?.user?.avatar);
     const [loading, setLoading] = useState<boolean>(false);
-    const [errors, setErrors] = useState<string[]>();
+    const [errors, setErrors] = useState<AppError>();
 
     const handleSubmitProfileForm = async (e) => {
         e.preventDefault();
@@ -35,13 +36,7 @@ export default function useProfile(props: IUserProfileProps) {
             props.setDisableForm(true)
             setLoading(false)
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                setErrors(error.response.data.message.details.map((details) => {
-                    return details.message;
-                }));
-            } else {
-                setErrors([error.response.data.message])
-            }
+
         } finally {
             setLoading(false);
         }

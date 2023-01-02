@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react"
 import { User } from "../../entities/User";
-import { userRepository } from "../../server/user/UserRepository";
+import { userRepository } from "../../server/repository/user/UserRepository";
 
 interface IProps {
     user: User;

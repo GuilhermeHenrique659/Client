@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { PostEntity } from "../../entities/PostEntity";
-import { postRepository } from "../../server/post/PostRepository";
+import { postRepository } from "../../server/repository/post/PostRepository";
 import { serverRepository } from "../../server/ServerRepository";
 import Button from "../buttons/Button";
 
