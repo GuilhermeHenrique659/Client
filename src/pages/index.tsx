@@ -41,7 +41,11 @@ export default function Home() {
     }
 
     if (token) {
-        listener.recconect()
+        try {
+            listener.recconect()
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     return (

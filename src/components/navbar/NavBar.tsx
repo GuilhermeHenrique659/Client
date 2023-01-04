@@ -32,9 +32,7 @@ function Notifiation() {
         }
     }, [notification])
 
-    listener.addListern<Notification>('notification', (data: Notification) => {
-        setNotifiation(data)
-    });
+    listener.addListern<Notification>('notification', (data: Notification) => setNotifiation(data));
 
     const HandleShowNotifications = () => {
         if (!displayNotificationDropdown)
@@ -46,7 +44,6 @@ function Notifiation() {
     const handleDeleteNotification = async (notificationId: string) => {
         const res = await notificationRepository.deleteNotification(notificationId);
         if (res) {
-            const notificationIndex = notifications.findIndex((notification) => notification.id === notificationId);
             setNotifiations(notifications.filter((notification) => notification.id !== notificationId));
         }
     }

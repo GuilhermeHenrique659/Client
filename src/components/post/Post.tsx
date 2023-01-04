@@ -28,8 +28,6 @@ async function getPostList(page: number, userId?: string): Promise<IGetPostList>
 }
 
 export default function Post(props: { userId?: string }) {
-    console.log(props.userId);
-
     const [posts, setPosts] = useState<PostEntity[]>([]);
     const [total, setTotal] = useState<number>();
     const [page, setPage] = useState<number>();

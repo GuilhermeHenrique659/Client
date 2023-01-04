@@ -15,6 +15,7 @@ class NotificationRepository extends AbstractRepository {
         }
     }
 
+    @isAuthetificated()
     public async deleteNotification(notificationId: string): Promise<RepositoryOutput<Boolean>> {
         try {
             return await serverRepository.delete(`/notifications/${notificationId}`);
