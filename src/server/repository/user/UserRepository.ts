@@ -4,9 +4,13 @@ import { IUserSaveDTO } from "./IUserSaveDTO";
 import RepositoryOutput from "../RepositoryBoundry";
 import AbstractRepository from "../AbstractRepository";
 import { User } from "../../../entities/User";
+import isAuthetificated from "../IsAtuthenticaded";
 
-type token = String
-type UserLogin = User & token;
+type UserLogin = {
+    token: string,
+    userExits: User
+};
+
 
 
 class UserRepository extends AbstractRepository {
@@ -19,6 +23,7 @@ class UserRepository extends AbstractRepository {
         }
     }
 
+    @isAuthetificated()
     public async updateAvatar(file: any): Promise<RepositoryOutput> {
         try {
             return await serverRepository.patch('/user/avatar', file, {
@@ -29,6 +34,7 @@ class UserRepository extends AbstractRepository {
         }
     }
 
+    @isAuthetificated()
     public async updateUser(user: Record<string, string>): Promise<RepositoryOutput> {
         try {
             return await serverRepository.put('/user', user);

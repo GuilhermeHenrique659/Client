@@ -1,6 +1,3 @@
-import { useEffect } from "react";
-import Button from "../components/buttons/Button";
-import Input from "../components/forms/input";
 import ProfileForm from "../components/forms/ProfileForm";
 import NavBar from "../components/navbar/NavBar";
 import Post from "../components/post/Post";

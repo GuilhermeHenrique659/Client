@@ -11,7 +11,7 @@ export class PostEntity {
 
     public user?: User;
 
-    constructor(props: PostEntity) {
+    constructor(props: Omit<PostEntity, keyof PostEntity>) {
         Object.assign(this, props);
     }
 

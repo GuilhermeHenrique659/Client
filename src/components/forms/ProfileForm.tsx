@@ -23,6 +23,10 @@ export default function ProfileForm(props: IProfileFormProps) {
         setDisableForm,
     });
 
+    console.log(name);
+    console.log(email);
+
+
     useEffect(() => {
         if (props.user) {
             setEmail(props.user.email)
@@ -40,9 +44,9 @@ export default function ProfileForm(props: IProfileFormProps) {
             <form className='m-2' onSubmit={handleSubmitProfileForm}>
                 <Input readonly={disableForm} label="Nome" type="text" value={name} onChange={setName} />
                 <hr className='border-gray-500 w-full p-1 m-2' />
-                <Input readonly={disableForm} label="E-mail" type="email" value={email} onChange={setEmail} />
-                <hr className='border-gray-500 w-full p-1 m-2' />
                 {!disableForm ? <>
+                    <Input readonly={disableForm} label="E-mail" type="email" value={email} onChange={setEmail} />
+                    <hr className='border-gray-500 w-full p-1 m-2' />
                     <Input readonly={disableForm} label="Nova senha" type="password" value={password} onChange={setPassword} />
                     <hr className='border-gray-500 w-full p-1 m-2' />
 

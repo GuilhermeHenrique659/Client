@@ -2,10 +2,10 @@ import { useState } from "react";
 import { PostEntity } from "../../entities/PostEntity";
 import useSendPost from "../../hooks/PostHooks";
 import { postRepository } from "../../server/repository/post/PostRepository";
-import { serverRepository } from "../../server/ServerRepository";
 import Button from "../buttons/Button";
 import { Errors } from "../errors/Errors";
 import Input from "./input";
+import { AppError } from "../errors/AppError";
 
 interface ICreatePost {
     token: string
@@ -14,35 +14,21 @@ interface ICreatePost {
 
 export default function CreatePostForm(props: ICreatePost) {
     const { title, setTitle, description, setDescription } = useSendPost()
-    const [error, setError] = useState<string[]>();
+    const [error, setError] = useState<AppError>();
 
     const handleSubmitPost = async (e) => {
         e.preventDefault()
         const post = new PostEntity({
-            title: title,
-            description: description,
+            title,
+            description,
         })
-
-        if (props.token) {
-            serverRepository.setJWT(props.token);
-            try {
-                await postRepository.savePost(post);
-                const postUpdated = new Event('postUpdated');
-                window.dispatchEvent(postUpdated);
-                props.closeForm()
-            } catch (error) {
-                if (error.response.data.message) {
-                    console.log(error);
-
-                    setError(error.response.data.message.details.map((details) => {
-                        return details.message;
-                    }));
-                }
-                setError([error.response.data.message])
-            }
-
-        } else {
-            setError(['Entre com para fazer postagem'])
+        try {
+            await postRepository.savePost(post);
+            const postUpdated = new Event('postUpdated');
+            window.dispatchEvent(postUpdated);
+            props.closeForm()
+        } catch (error) {
+            setError(error)
         }
     }
 
@@ -53,6 +39,7 @@ export default function CreatePostForm(props: ICreatePost) {
                 <label className='mb-4'>Descrição</label>
                 <textarea name="description" className='text-black w-full mt-4 rounded-md' onChange={e => setDescription(e.target.value)} rows={10}></textarea>
             </div>
+            {error ? Errors(error) : false}
             <div className='flex justify-between '>
                 <Button className='flex items-center justify-around'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">

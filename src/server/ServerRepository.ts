@@ -12,11 +12,12 @@ export class ServerRepository {
 
     public async get(path: string): Promise<IServerResponse> {
         if (this._jwtoken) {
-            return this._axios.get(this._serverUrl + path, {
+            const response = await this._axios.get(this._serverUrl + path, {
                 headers: {
                     Authorization: this._jwtoken
                 }
             });
+            return response.data
         } else {
             const response = await this._axios.get(this._serverUrl + path);
             return response.data;
@@ -25,11 +26,12 @@ export class ServerRepository {
 
     public async post(path, data: any, header?: Record<string, string>): Promise<IServerResponse> {
         if (this._jwtoken) {
-            return this._axios.post(this._serverUrl + path, data, {
+            const response = await this._axios.post(this._serverUrl + path, data, {
                 headers: header ? { Authorization: this._jwtoken, ...header } : {
                     Authorization: this._jwtoken
                 }
             });
+            return response.data
         } else {
             const response = await this._axios.post(this._serverUrl + path, data);
             return response.data;
@@ -38,11 +40,12 @@ export class ServerRepository {
 
     public async put(path, data: any, header?: Record<string, string>): Promise<IServerResponse> {
         if (this._jwtoken) {
-            return this._axios.put(this._serverUrl + path, data, {
+            const response = await this._axios.put(this._serverUrl + path, data, {
                 headers: header ? { Authorization: this._jwtoken, ...header } : {
                     Authorization: this._jwtoken
                 }
             });
+            return response.data
         } else {
             const response = await this._axios.put(this._serverUrl + path, data);
             return response.data;
@@ -51,13 +54,29 @@ export class ServerRepository {
 
     public async patch(path, data?: any, header?: Record<string, string>): Promise<IServerResponse> {
         if (this._jwtoken) {
-            return this._axios.patch(this._serverUrl + path, data, {
+            const response = await this._axios.patch(this._serverUrl + path, data, {
                 headers: header ? { Authorization: this._jwtoken, ...header } : {
                     Authorization: this._jwtoken
                 }
             });
+            return response.data
         } else {
             const response = await this._axios.patch(this._serverUrl + path, data);
+            return response.data;
+        }
+    }
+
+
+    public async delete(path, data?: any, header?: Record<string, string>): Promise<IServerResponse> {
+        if (this._jwtoken) {
+            const response = await this._axios.delete(this._serverUrl + path, {
+                headers: header ? { Authorization: this._jwtoken, ...header } : {
+                    Authorization: this._jwtoken
+                }
+            });
+            return response.data
+        } else {
+            const response = await this._axios.delete(this._serverUrl + path);
             return response.data;
         }
     }

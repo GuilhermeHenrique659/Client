@@ -23,7 +23,7 @@ export default function RegisterForm(props: IloginProps) {
     const [errors, setErrors] = useState<AppError>();
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         try {
             await userRepository.register({
                 name: props.inputs.name,
@@ -33,9 +33,7 @@ export default function RegisterForm(props: IloginProps) {
             props.showForm()
 
         } catch (error) {
-            if (error instanceof AppError) {
-                setErrors(error);
-            }
+            setErrors(error);
         }
     }
 

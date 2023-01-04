@@ -6,6 +6,7 @@ import Button from "../buttons/Button";
 import { Errors } from "../errors/Errors";
 import Input from "./input";
 import { AppError } from "../errors/AppError";
+import listener from "../../listener/Listener";
 
 interface IloginProps {
     inputs: {
@@ -26,12 +27,11 @@ export default function LoginForm(props: IloginProps) {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            const user = await userRepository.login({
+            const { data } = await userRepository.login({
                 email: props.inputs.email,
                 password: props.inputs.password,
             });
-
-            localStorage.setItem('user', JSON.stringify(user.data));
+            localStorage.setItem('user', JSON.stringify(data));
             router.push('/')
         } catch (error) {
             setErrors(error)

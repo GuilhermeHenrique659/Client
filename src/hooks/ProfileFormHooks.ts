@@ -1,8 +1,8 @@
-import axios from "axios";
 import { Dispatch, SetStateAction, useState } from "react";
 import { User } from "../entities/User";
 import { userRepository } from "../server/repository/user/UserRepository";
 import { AppError } from "../components/errors/AppError";
+import LocalStorageHelper from "../helpers/LocalStorageHelper";
 
 interface IUserProfileProps {
     user: User,
@@ -15,7 +15,6 @@ export default function useProfile(props: IUserProfileProps) {
     const [email, setEmail] = useState<string>(props?.user?.email);
     const [password, setPassword] = useState<string>();
     const [passwordToConfirm, setPasswordToConfirm] = useState<string>();
-    const [avatar, setAvatar] = useState<string>(props?.user?.avatar);
     const [loading, setLoading] = useState<boolean>(false);
     const [errors, setErrors] = useState<AppError>();
 
@@ -27,20 +26,18 @@ export default function useProfile(props: IUserProfileProps) {
                 name, email, password, passwordToConfirm
             });
             const userLocalStorage = {
-                token: JSON.parse(localStorage.getItem('user')).token,
+                token: LocalStorageHelper.getItemObject('user').token,
                 userExits: res.data
             }
-            localStorage.removeItem('user')
-            localStorage.setItem('user', JSON.stringify(userLocalStorage));
+            LocalStorageHelper.localStorageUpdate('user', userLocalStorage)
             props.setUser(res.data);
             props.setDisableForm(true)
             setLoading(false)
         } catch (error) {
-
+            setErrors(error)
         } finally {
             setLoading(false);
         }
-
     }
 
     return {

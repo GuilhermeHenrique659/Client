@@ -1,11 +1,15 @@
 import { PostEntity } from "../../../entities/PostEntity";
 import { serverRepository } from "../../ServerRepository";
 import AbstractRepository from "../AbstractRepository";
+import isAuthetificated from "../IsAtuthenticaded";
 import RepositoryOutput from "../RepositoryBoundry";
+import IPostListPaginated from "./IPostListPaginated";
 
 
 export class PostRepository extends AbstractRepository {
-    public async listPost(page: number, userId?: string): Promise<RepositoryOutput> {
+
+    @isAuthetificated()
+    public async listPost(page: number, userId?: string): Promise<RepositoryOutput<IPostListPaginated>> {
         try {
             return await serverRepository.get(`/post?&page=${page}${userId ? '&userId=' + userId : ''}`);
         } catch (error) {
@@ -13,7 +17,8 @@ export class PostRepository extends AbstractRepository {
         }
     }
 
-    public async savePost(post: PostEntity): Promise<RepositoryOutput> {
+    @isAuthetificated()
+    public async savePost(post: PostEntity): Promise<RepositoryOutput<PostEntity>> {
         try {
             return await serverRepository.post('/post', post);
         } catch (error) {
@@ -21,9 +26,10 @@ export class PostRepository extends AbstractRepository {
         }
     }
 
-    public async addLike(userId: string) {
+    @isAuthetificated()
+    public async addLike(userId: string): Promise<RepositoryOutput<{ likeIsAdd: boolean }>> {
         try {
-            return serverRepository.patch(`/post/addLike?&postId=${userId}`);
+            return await serverRepository.patch(`/post/addLike?&postId=${userId}`);
         } catch (error) {
             this.errorHandle(error)
         }
