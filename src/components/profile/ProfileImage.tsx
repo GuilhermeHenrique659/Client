@@ -1,9 +1,11 @@
 import { Dispatch, SetStateAction, useState } from "react"
 import { User } from "../../entities/User";
 import { userRepository } from "../../server/repository/user/UserRepository";
+import LocalStorageHelper from "../../helpers/LocalStorageHelper";
 
 interface IProps {
     user: User;
+    profileIsTheUser: boolean;
     setUser: Dispatch<SetStateAction<User>>
 }
 
@@ -20,11 +22,10 @@ export default function ProfileImage(props: IProps) {
             data.append('file', file[0])
             const res = await userRepository.updateAvatar(data);
             const user = {
-                token: JSON.parse(localStorage.getItem('user')).token,
+                token: LocalStorageHelper.getItemObject('user').token,
                 userExits: res.data
             }
-            localStorage.removeItem('user')
-            localStorage.setItem('user', JSON.stringify(user));
+            LocalStorageHelper.localStorageUpdate('user', user)
             props.setUser(res.data)
             setLoading(false);
         } catch (err) {
@@ -41,7 +42,7 @@ export default function ProfileImage(props: IProps) {
                         style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_SERVER_URL}/files/${props.user.avatar})` }}>
                     </div>
 
-                    <input id="dropzone-file" type="file" name="file" className="hidden" disabled={loading} onChange={handleFile} />
+                    <input id="dropzone-file" type="file" name="file" className="hidden" disabled={loading || props.profileIsTheUser} onChange={handleFile} />
                 </label>
                 <h2 className='m-4 text-lg'>{props.user.name}</h2>
             </div>

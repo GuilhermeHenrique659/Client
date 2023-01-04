@@ -27,6 +27,15 @@ export class PostRepository extends AbstractRepository {
     }
 
     @isAuthetificated()
+    public async showPost(postId: string): Promise<RepositoryOutput<PostEntity>> {
+        try {
+            return await serverRepository.get('/post/' + postId);
+        } catch (error) {
+            this.errorHandle(error)
+        }
+    }
+
+    @isAuthetificated()
     public async addLike(userId: string): Promise<RepositoryOutput<{ likeIsAdd: boolean }>> {
         try {
             return await serverRepository.patch(`/post/addLike?&postId=${userId}`);

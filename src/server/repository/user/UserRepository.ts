@@ -43,6 +43,14 @@ class UserRepository extends AbstractRepository {
         }
     }
 
+    public async showUser(userId: string): Promise<RepositoryOutput<User>> {
+        try {
+            return await serverRepository.get('/user/' + userId);
+        } catch (error) {
+            this.errorHandle(error)
+        }
+    }
+
     public async login(user: IUserLoginDTO): Promise<RepositoryOutput<UserLogin>> {
         try {
             return await serverRepository.post('/user/session', user);

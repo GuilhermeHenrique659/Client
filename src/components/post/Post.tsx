@@ -4,6 +4,7 @@ import { postRepository } from "../../server/repository/post/PostRepository";
 import { serverRepository } from "../../server/ServerRepository";
 import Button from "../buttons/Button";
 import useLike from "../../hooks/LikeHooks";
+import { useRouter } from "next/router";
 
 interface IGetPostList {
     total: number;
@@ -33,6 +34,7 @@ export default function Post(props: { userId?: string }) {
     const [page, setPage] = useState<number>();
     const [loading, setLoading] = useState(false)
     const handleAddLike = useLike();
+    const router = useRouter();
 
     const handleViewMore = () => {
         if (posts.length <= total) {
@@ -81,7 +83,9 @@ export default function Post(props: { userId?: string }) {
                     return (
                         <div key={post.id} className='p-6 overflow-y-auto'>
                             <div className="flex items-center justify-start mb-5">
-                                <div className="w-14 h-14 rounded-full bg-cover mr-6" style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_SERVER_URL}/files/${post.user.avatar})` }}></div>
+                                <Button onClick={() => router.push('/profile?&userId=' + post.user.id)}>
+                                    <div className="w-14 h-14 rounded-full bg-cover mr-6" style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_SERVER_URL}/files/${post.user.avatar})` }}></div>
+                                </Button>
                                 <h4>{post.user.name}</h4>
                             </div>
                             <div className='flex-row p-2 w-fit'>
