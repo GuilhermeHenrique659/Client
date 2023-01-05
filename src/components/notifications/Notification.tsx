@@ -36,6 +36,7 @@ export default function Notifiation() {
     const [notifications, setNotifiations] = useState<Notification[]>();
     const [notification, setNotifiation] = useState<Notification>();
     const [showPostLiked, setShowPostLiked] = useState<boolean>(false);
+    const [notificationToDelete, setNotificationToDelete] = useState<string>();
     const [post, setPost] = useState<PostEntity>();
 
     useEffect(() => {
@@ -67,13 +68,14 @@ export default function Notifiation() {
         }
     }
 
-    const handleShowPostLiked = (postId: string) => {
+    const handleShowPostLiked = (postId: string, notificationId: string) => {
         const getPost = async () => {
             const post = await postRepository.showPost(postId);
             setPost(post.data);
         }
         getPost().then(() => {
             setShowPostLiked(true);
+            setNotificationToDelete(notificationId)
         })
     }
 
@@ -81,6 +83,8 @@ export default function Notifiation() {
         setShowPostLiked(false);
         setPost(null)
     }
+
+    console.log(displayNotificationDropdown);
 
     return (
         <>
@@ -91,13 +95,13 @@ export default function Notifiation() {
                     {notifications ? notifications.length : false}
                 </div>
             </Button>
-            <div id="dropdown" className={`z-10 bg-white flex flex-col text-black justify-around max-w-7xl divide-y divide-gray-100 rounded shadow w-64 dark:bg-gray-700 ${!displayNotificationDropdown ? 'hidden' : false}`}>
-                <ul className="py-1 text-sm flex flex-col text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                    {notifications ? notifications.map((notification: Notification) => {
+            <div id="dropdown" className={`z-10 top-20 mx-6 relative h-48 overflow-hidden bg-white flex flex-col text-black justify-around max-w-7xl divide-y divide-gray-100 rounded shadow w-64 dark:bg-gray-700 ${!displayNotificationDropdown ? 'hidden' : false}`}>
+                <ul className="py-1 text-sm overflow-y-scroll overflow-x-hidden flex flex-col text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                    {notifications && notifications.length ? notifications.map((notification: Notification) => {
                         return (
                             <li key={notification.id} className='flex flex-row items-center justify-start m-1'>
-                                <Button onClick={() => handleShowPostLiked(notification.link)} className="hover:bg-gray-100 w-5/6 dark:hover:bg-gray-600 dark:hover:text-white">{notification.message}</Button>
-                                <Button onClick={() => handleDeleteNotification(notification.id)} className=" hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                <Button onClick={() => handleShowPostLiked(notification.link, notification.id)} className="hover:bg-gray-100 w-10/12 dark:hover:bg-gray-600 dark:hover:text-white">{notification.message}</Button>
+                                <Button onClick={() => handleDeleteNotification(notification.id)} className=" hover:bg-gray-100 w-2/12 dark:hover:bg-gray-600 dark:hover:text-white">
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -106,9 +110,15 @@ export default function Notifiation() {
                                 </Button>
                             </li>
                         )
-                    }) : false}
-                    <li>
-                        <a href="#" onClick={HandleShowNotifications} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Fechar</a>
+                    }) : <li className="self-center items-center flex flex-col p-6 justify-center justify-around">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                        </svg>
+
+                        <p className="py-4">Nao tem nada na sua caixa de mensagens</p>
+                    </li>}
+                    <li className="self-center">
+                        <a href="#" onClick={HandleShowNotifications} className="block px-96 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Fechar</a>
                     </li>
                 </ul>
             </div>
@@ -124,8 +134,8 @@ export default function Notifiation() {
                         <div className="p-6 space-y-6">
                             {post && showPostLiked ? <PostNotification post={post}></PostNotification> : false}
                         </div>
-                        <div className="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                            <Button onClick={handleClosePostLiked} className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</Button>
+                        <div className="flex w-44 items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                            <Button onClick={() => { handleDeleteNotification(notificationToDelete), handleClosePostLiked() }} className="text-gray-500 w-44 text-center items-center h-14 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Excluir notificação</Button>
                         </div>
                     </div>
                 </div>

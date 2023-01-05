@@ -35,7 +35,7 @@ function NavBarUserAuthenticated(props: INavBar) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
             </Button>
-            <div className="flex justify-between items-center p-2 mr-2">
+            <div className="flex justify-between items-center p-4 mr-2">
                 <Notifiation></Notifiation>
                 <div className='border-black-100 w-11 h-11 rounded-full bg-cover mr-4' style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_SERVER_URL}/files/${props.user.avatar})` }}>
                 </div>
