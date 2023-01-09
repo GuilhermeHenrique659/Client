@@ -5,6 +5,9 @@ import NavBar from "../components/navbar/NavBar";
 import Post from "../components/post/Post";
 import useAuthenticated from "../hooks/AuthenticatedHooks";
 import listener from "../listener/Listener";
+import city from '../../public/img/city.jpg'
+import Image from "next/image";
+
 
 interface IPostListProps {
     token: string;
@@ -55,8 +58,12 @@ export default function Home() {
                 {token ? <PostList token={token}
                     showPostForm={showPostForm}
                     handleClosePostForm={handleClosePostForm}
-                    handleShowPostForm={handleShowPostForm}></PostList> : <p>Logue para fazer uma postagem </p>}
+                    handleShowPostForm={handleShowPostForm}></PostList> :
+                    <div>
+                        <p>Logue para fazer postagem</p>
+                    </div>
+                }
             </div>
-        </div>
+        </div >
     )
 }

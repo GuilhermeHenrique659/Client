@@ -5,6 +5,7 @@ import Button from "../buttons/Button";
 import Notification from "../../entities/Notification";
 import { PostEntity } from "../../entities/PostEntity";
 import { postRepository } from "../../server/repository/post/PostRepository";
+import NotificationType from "../../entities/NotificationType";
 
 
 function PostNotification(props: { post: PostEntity }) {
@@ -100,7 +101,10 @@ export default function Notifiation() {
                     {notifications && notifications.length ? notifications.map((notification: Notification) => {
                         return (
                             <li key={notification.id} className='flex flex-row items-center justify-start m-1'>
-                                <Button onClick={() => handleShowPostLiked(notification.link, notification.id)} className="hover:bg-gray-100 w-10/12 dark:hover:bg-gray-600 dark:hover:text-white">{notification.message}</Button>
+                                <Button onClick={() => {
+                                    if (notification.type === NotificationType.POSTLIKE)
+                                        handleShowPostLiked(notification.link, notification.id)
+                                }} className="hover:bg-gray-100 w-10/12 dark:hover:bg-gray-600 dark:hover:text-white">{notification.message}</Button>
                                 <Button onClick={() => handleDeleteNotification(notification.id)} className=" hover:bg-gray-100 w-2/12 dark:hover:bg-gray-600 dark:hover:text-white">
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

@@ -7,6 +7,9 @@ export class Listener {
     private socket
 
     constructor() {
+        this.connect()
+    }
+    public connect() {
         const token = LocalStorageHelper.getItemObject('user');
         if (token)
             this.socket = io(process.env.NEXT_PUBLIC_SERVER_WS, {
@@ -27,9 +30,13 @@ export class Listener {
     }
 
     public addListern<T>(listenerName: string, functionEvent: Function) {
-        this.socket.on(listenerName, function (params: T) {
-            functionEvent(params);
-        })
+        try {
+            this.socket.on(listenerName, function (params: T) {
+                functionEvent(params);
+            })
+        } catch (err) {
+            this.connect()
+        }
     }
 }
 
