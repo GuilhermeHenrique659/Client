@@ -6,6 +6,8 @@ import Notification from "../../entities/Notification";
 import { PostEntity } from "../../entities/PostEntity";
 import { postRepository } from "../../server/repository/post/PostRepository";
 import NotificationType from "../../entities/NotificationType";
+import NotificationPost from "./NotificationPost";
+import NotificationFriendshipRequest from "./NotificationFriendshipRequest";
 
 
 function PostNotification(props: { post: PostEntity }) {
@@ -62,30 +64,11 @@ export default function Notifiation() {
             setDisplayNotificationDropdown(false)
     }
 
-    const handleDeleteNotification = async (notificationId: string) => {
-        const res = await notificationRepository.deleteNotification(notificationId);
-        if (res) {
-            setNotifiations(notifications.filter((notification) => notification.id !== notificationId));
-        }
-    }
-
-    const handleShowPostLiked = (postId: string, notificationId: string) => {
-        const getPost = async () => {
-            const post = await postRepository.showPost(postId);
-            setPost(post.data);
-        }
-        getPost().then(() => {
-            setShowPostLiked(true);
-            setNotificationToDelete(notificationId)
-        })
-    }
 
     const handleClosePostLiked = () => {
         setShowPostLiked(false);
         setPost(null)
     }
-
-    console.log(displayNotificationDropdown);
 
     return (
         <>
@@ -101,17 +84,16 @@ export default function Notifiation() {
                     {notifications && notifications.length ? notifications.map((notification: Notification) => {
                         return (
                             <li key={notification.id} className='flex flex-row items-center justify-start m-1'>
-                                <Button onClick={() => {
-                                    if (notification.type === NotificationType.POSTLIKE)
-                                        handleShowPostLiked(notification.link, notification.id)
-                                }} className="hover:bg-gray-100 w-10/12 dark:hover:bg-gray-600 dark:hover:text-white">{notification.message}</Button>
-                                <Button onClick={() => handleDeleteNotification(notification.id)} className=" hover:bg-gray-100 w-2/12 dark:hover:bg-gray-600 dark:hover:text-white">
-                                    <span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </span>
-                                </Button>
+                                {notification.type === NotificationType.POSTLIKE ? <NotificationPost
+                                    notification={notification}
+                                    notifications={notifications}
+                                    setNotifiations={setNotifiations}
+                                    setShowPostLiked={setShowPostLiked}
+                                    setNotificationToDelete={setNotificationToDelete}
+                                    setPost={setPost}
+                                ></NotificationPost> : false}
+                                {notification.type === NotificationType.FRIENDSHIPREQUEST ? <NotificationFriendshipRequest notification={notification} setNotifiations={setNotifiations} notifications={notifications}
+                                ></NotificationFriendshipRequest> : false}
                             </li>
                         )
                     }) : <li className="self-center items-center flex flex-col p-6 justify-center justify-around">
