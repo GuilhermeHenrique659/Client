@@ -1,13 +1,10 @@
-import { useState } from "react"
+import { useState } from "react";
 import Button from "../components/buttons/Button";
 import CreatePostForm from "../components/forms/CreatePostForm";
 import NavBar from "../components/navbar/NavBar";
 import Post from "../components/post/Post";
 import useAuthenticated from "../hooks/AuthenticatedHooks";
 import listener from "../listener/Listener";
-import city from '../../public/img/city.jpg'
-import Image from "next/image";
-
 
 interface IPostListProps {
     token: string;
@@ -18,17 +15,27 @@ interface IPostListProps {
 
 function PostList(props: IPostListProps) {
     return (
-        <div className='bg-slate-900 w-full lg:w-2/3 h-full mt-10 rounded-t-md'>
-            {props.showPostForm ? <div className="text-white flex flex-col justify-around m-6">
-                <CreatePostForm token={props.token} closeForm={props.handleClosePostForm}></CreatePostForm>
-            </div> : <div className='p-10'><Button className='bg-indigo-600 text-white w-fit h-12 p-4 flex items-center justify-around' onClick={props.handleShowPostForm}>Enviar postagem</Button></div>}
+        <div className="bg-slate-900 w-full lg:w-2/3 h-full mt-10 rounded-t-md">
+            {props.showPostForm ? (
+                <div className="text-white flex flex-col justify-around m-6">
+                    <CreatePostForm token={props.token} closeForm={props.handleClosePostForm}></CreatePostForm>
+                </div>
+            ) : (
+                <div className="p-10">
+                    <Button
+                        className="bg-indigo-600 text-white w-fit h-12 p-4 flex items-center justify-around"
+                        onClick={props.handleShowPostForm}
+                    >
+                        Enviar postagem
+                    </Button>
+                </div>
+            )}
             <div className="">
                 <Post></Post>
             </div>
         </div>
-    )
+    );
 }
-
 
 export default function Home() {
     const { token, user, handleLogout } = useAuthenticated();
@@ -36,16 +43,16 @@ export default function Home() {
     const [showPostForm, setShowPostForm] = useState<boolean>(false);
 
     const handleShowPostForm = () => {
-        setShowPostForm(true)
-    }
+        setShowPostForm(true);
+    };
 
     const handleClosePostForm = () => {
-        setShowPostForm(false)
-    }
+        setShowPostForm(false);
+    };
 
     if (token) {
         try {
-            listener.recconect()
+            listener.recconect();
         } catch (err) {
             console.log(err);
         }
@@ -54,16 +61,20 @@ export default function Home() {
     return (
         <div>
             <NavBar token={token} user={user} onLogout={handleLogout}></NavBar>
-            <div className='bg-gray-300 flex items-center justify-around h-full mt-12'>
-                {token ? <PostList token={token}
-                    showPostForm={showPostForm}
-                    handleClosePostForm={handleClosePostForm}
-                    handleShowPostForm={handleShowPostForm}></PostList> :
+            <div className="bg-gray-300 flex items-center justify-around h-full mt-12">
+                {token ? (
+                    <PostList
+                        token={token}
+                        showPostForm={showPostForm}
+                        handleClosePostForm={handleClosePostForm}
+                        handleShowPostForm={handleShowPostForm}
+                    ></PostList>
+                ) : (
                     <div>
                         <p>Logue para fazer postagem</p>
                     </div>
-                }
+                )}
             </div>
-        </div >
-    )
+        </div>
+    );
 }

@@ -1,3 +1,4 @@
+import { Friendship } from "../../../entities/Friendship";
 import { serverRepository } from "../../ServerRepository";
 import AbstractRepository from "../AbstractRepository";
 import isAuthetificated from "../IsAtuthenticaded";
@@ -18,7 +19,7 @@ export class FriendshipRepository extends AbstractRepository {
     }
 
     @isAuthetificated()
-    public async listFriendship(): Promise<RepositoryOutput<Record<string, unknown>[]>> {
+    public async listFriendship(): Promise<RepositoryOutput<Friendship[]>> {
         try {
             return await serverRepository.get('/friendship');
         } catch (error) {

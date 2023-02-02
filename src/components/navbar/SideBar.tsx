@@ -3,6 +3,7 @@ import Button from "../buttons/Button"
 import { useEffect, useState } from "react";
 import { friendshipRepository } from "../../server/repository/friendship/friendshipRepository";
 import { useRouter } from "next/router";
+import { Friendship } from "../../entities/Friendship";
 
 interface ISideBarProps {
     display: boolean
@@ -10,7 +11,7 @@ interface ISideBarProps {
 }
 
 export default function SideBar(props: ISideBarProps) {
-    const [friendList, setFriendList] = useState<Record<string, unknown>[]>();
+    const [friendList, setFriendList] = useState<Friendship[]>();
     const [collapseFriendList, setCollapseFriendList] = useState<boolean>(false)
     const router = useRouter();
 

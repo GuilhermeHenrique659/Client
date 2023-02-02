@@ -1,3 +1,4 @@
+import { Files } from "./Files";
 import { User } from "./User";
 
 export class PostEntity {
@@ -6,6 +7,8 @@ export class PostEntity {
     public title: string;
 
     public description: string;
+
+    public files?: Files[];
 
     public like?: number;
 

@@ -2,15 +2,14 @@ import { Socket } from "dgram";
 import LocalStorageHelper from "../helpers/LocalStorageHelper";
 import { io } from "socket.io-client";
 
-
 export class Listener {
-    private socket
+    private socket;
 
     constructor() {
-        this.connect()
+        this.connect();
     }
     public connect() {
-        const token = LocalStorageHelper.getItemObject('user');
+        const token = LocalStorageHelper.getItemObject("user");
         if (token)
             this.socket = io(process.env.NEXT_PUBLIC_SERVER_WS, {
                 reconnection: true,
@@ -18,8 +17,8 @@ export class Listener {
                 reconnectionDelayMax: 5000,
                 reconnectionAttempts: Infinity,
                 extraHeaders: {
-                    token: `Bearer ${token.token}`
-                }
+                    token: `Bearer ${token.token}`,
+                },
             });
     }
 
@@ -33,9 +32,9 @@ export class Listener {
         try {
             this.socket.on(listenerName, function (params: T) {
                 functionEvent(params);
-            })
+            });
         } catch (err) {
-            this.connect()
+            this.connect();
         }
     }
 }
