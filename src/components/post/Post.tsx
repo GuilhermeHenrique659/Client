@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { PostEntity } from "../../entities/PostEntity";
 import { postRepository } from "../../server/repository/post/PostRepository";
-import { serverRepository } from "../../server/ServerRepository";
 import Button from "../buttons/Button";
 import useLike from "../../hooks/LikeHooks";
 import { useRouter } from "next/router";
@@ -14,60 +13,92 @@ interface IGetPostList {
     posts: PostEntity[];
 }
 
-function postImages(images: Files[]) {
-    if (images.length > 1)
+const imageSize = [
+    "w-1/2 p-1 md:p-2",
+    "w-1/2 p-1 md:p-2",
+    "w-full p-1 md:p-2",
+    "w-full p-1 md:p-2",
+    "w-1/2 p-1 md:p-2",
+    "w-1/2 p-1 md:p-2",
+];
+function PostImages(props: { images: Files[] }) {
+    const [showMoreImage, setshowMoreImage] = useState<boolean>(true);
+
+    const handleShowMoreImage = () => {
+        if (showMoreImage) {
+            setshowMoreImage(false);
+        } else {
+            setshowMoreImage(true);
+        }
+    };
+    if (props.images.length > 1) {
         return (
-            <>
+            <div>
                 <section className="overflow-hidden text-gray-700">
                     <div className="container px-5 py-2 mx-auto lg:pt-24 lg:px-32">
                         <div className="flex flex-wrap -m-1 md:-m-2">
-                            <div className="flex flex-wrap w-1/2">
-                                <div className="w-1/2 p-1 md:p-2">
-                                    <img alt="gallery" className="block object-cover object-center w-full h-full rounded-lg" src="" />
-                                </div>
-                                <div className="w-1/2 p-1 md:p-2">
-                                    <img
-                                        alt="gallery"
-                                        className="block object-cover object-center w-full h-full rounded-lg"
-                                        src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(72).webp"
-                                    />
-                                </div>
-                                <div className="w-full p-1 md:p-2">
-                                    <img
-                                        alt="gallery"
-                                        className="block object-cover object-center w-full h-full rounded-lg"
-                                        src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp"
-                                    />
-                                </div>
+                            <div className="flex flex-wrap w-2/2">
+                                {props.images.map((image, index) => {
+                                    if (index === 5 && showMoreImage) {
+                                        return (
+                                            <Button
+                                                key={index}
+                                                className={`${imageSize[index % 6]} flex self-center justify-around`}
+                                                onClick={handleShowMoreImage}
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    strokeWidth={1.5}
+                                                    stroke="currentColor"
+                                                    className="w-20 h-20"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                                </svg>
+                                            </Button>
+                                        );
+                                    }
+                                    return (
+                                        <div
+                                            key={index}
+                                            className={`${imageSize[index % 6]} ${index > 4 && showMoreImage ? "hidden" : false}`}
+                                        >
+                                            <img
+                                                alt="gallery"
+                                                className="block object-cover object-center w-full h-full rounded-lg"
+                                                src={image.filename}
+                                            ></img>
+                                        </div>
+                                    );
+                                })}
                             </div>
-                            <div className="flex flex-wrap w-1/2">
+                        </div>
+                    </div>
+                </section>
+            </div>
+        );
+    } else {
+        return (
+            <div>
+                <section className="overflow-hidden text-gray-700">
+                    <div className="container px-5 py-2 mx-auto lg:pt-24 lg:px-32">
+                        <div className="flex flex-wrap -m-1 md:-m-2">
+                            <div className="flex flex-wrap w-2/2">
                                 <div className="w-full p-1 md:p-2">
                                     <img
                                         alt="gallery"
                                         className="block object-cover object-center w-full h-full rounded-lg"
-                                        src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp"
-                                    />
-                                </div>
-                                <div className="w-1/2 p-1 md:p-2">
-                                    <img
-                                        alt="gallery"
-                                        className="block object-cover object-center w-full h-full rounded-lg"
-                                        src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(75).webp"
-                                    />
-                                </div>
-                                <div className="w-1/2 p-1 md:p-2">
-                                    <img
-                                        alt="gallery"
-                                        className="block object-cover object-center w-full h-full rounded-lg"
-                                        src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(77).webp"
-                                    />
+                                        src={props.images[0].filename}
+                                    ></img>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
-            </>
+            </div>
         );
+    }
 }
 
 async function getPostList(page: number, userId?: string): Promise<IGetPostList> {
@@ -147,15 +178,7 @@ export default function Post(props: { userId?: string }) {
                             <div className="flex-row p-2 w-fit">
                                 <h2 className="text-xl m-4">{post.title}</h2>
                                 <p className="m-4">{post.description}</p>
-                                {post.files.length ? (
-                                    <img
-                                        className="h-96 items-center"
-                                        src={`${process.env.NEXT_PUBLIC_SERVER_URL}/files/${post.files[0].filename}`}
-                                        alt=""
-                                    />
-                                ) : (
-                                    false
-                                )}
+                                {post.files.length ? <PostImages images={post.files}></PostImages> : false}
                             </div>
                             <div className="flex flex-row p-4 m-4 items-center">
                                 <Button onClick={() => handleAddLike(post.id)}>

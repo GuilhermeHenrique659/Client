@@ -16,7 +16,7 @@ interface IloginProps {
         setEmail: Dispatch<SetStateAction<string>>;
         password: string;
         setPassword: Dispatch<SetStateAction<string>>;
-    }
+    };
     showForm: () => void;
 }
 
@@ -25,18 +25,18 @@ export default function LoginForm(props: IloginProps) {
     const router = useRouter();
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         try {
             const { data } = await userRepository.login({
                 email: props.inputs.email,
                 password: props.inputs.password,
             });
-            localStorage.setItem('user', JSON.stringify(data));
-            router.push('/')
+            localStorage.setItem("user", JSON.stringify(data));
+            router.push("/");
         } catch (error) {
-            setErrors(error)
+            setErrors(error);
         }
-    }
+    };
 
     return (
         <div>
@@ -46,9 +46,11 @@ export default function LoginForm(props: IloginProps) {
                 {errors ? Errors(errors) : false}
                 <div className="m-4">
                     <Button className="bg-indigo-800 m-2">Entrar</Button>
-                    <Button className="bg-indigo-800 m-2" onClick={props.showForm}>Cadastrar</Button>
+                    <Button className="bg-indigo-800 m-2" onClick={props.showForm}>
+                        Cadastrar
+                    </Button>
                 </div>
             </form>
         </div>
-    )
+    );
 }
